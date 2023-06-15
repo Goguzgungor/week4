@@ -1,3 +1,4 @@
+
 fn main() {
     // Create two BankAccount instances
     let mut account1 = BankAccount {
@@ -17,7 +18,7 @@ fn main() {
     account1.deposit(deposit_amount);
     
     // Call withdraw on account2
-    let withdraw_amount = 50;
+    let withdraw_amount = 10000;
     account2.withdraw(withdraw_amount);
     
     // Call balance on both accounts and print the result
@@ -27,8 +28,8 @@ fn main() {
 
 
 trait Account<T>{
-    fn deposit(&mut self,new:T) -> i32;
-    fn withdraw(&mut self,new:T) -> i32;
+    fn deposit(&mut self,new:T) -> Result<(), String>;
+    fn withdraw(&mut self,new:T) -> Result<(), String>;
     fn balance(&mut self)   -> i32;
 }
 
@@ -39,19 +40,29 @@ struct BankAccount{
 }
 
 impl Account<i32> for BankAccount {
-    fn deposit(&mut self,deposit:i32) -> i32 {
+    fn deposit(&mut self,deposit:i32) -> Result<(), String> {
         self.balance+=deposit;
-        println!("{}",self.balance);
-        self.balance
+        if (self.balance<0){
+            Err(String::from("Balance is negative!"))
+    }
+        else{
+            Ok(())
+        }
     }
 
-    fn withdraw(&mut self,amaount:i32) -> i32 {
+    fn withdraw(&mut self,amaount:i32) -> Result<(), String> {
         self.balance-=amaount;
         println!("{}",self.balance);
-        self.balance
+        if (self.balance<0){
+            panic!("Balance is negative!");
+        }
+        else{
+            Ok(())
+        }
     }
 
     fn balance(&mut self) -> i32{
         self.balance
     }
 }
+
